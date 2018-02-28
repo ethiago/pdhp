@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - PORT:"8080"
+      - PORT:8080
       - API_BASE_URL:"http://localhost:8000/v1"
     depends_on:
       - api
@@ -15,7 +15,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - PORT="8000"
+      - PORT=8000
       - DATABASE_URL="mysql://pdhpapi:pdhp_api_pass@localhost:3306/pdhpdb"
     depends_on:
       - db
