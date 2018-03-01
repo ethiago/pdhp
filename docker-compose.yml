@@ -2,30 +2,42 @@ version: '2'
 services:
   web:
     build: https://github.com/ethiago/pdhp-front.git
+    restart: 'always'
     ports:
       - "8080:8080"
     environment:
-      - PORT:8080
-      - API_BASE_URL:"http://localhost:8000/v1"
+      - "PORT=8080"
+      - "API_BASE_URL=http://localhost:8000/v1"
     depends_on:
       - api
 
   api:
     build: https://github.com/ethiago/pdhp-api.git
+    restart: 'always'
     ports:
       - "8000:8000"
     environment:
-      - PORT=8000
-      - DATABASE_URL="mysql://pdhpapi:pdhp_api_pass@localhost:3306/pdhpdb"
+      - "PORT:8000"
+      - "DATABASE_URL=mysql://pdhp_api:pdhp_api_pass@db:3306/pdhpdb"
+    depends_on:
+      - create
+
+  create:
+    build: https://github.com/ethiago/pdhp-api.git
+    environment:
+      - "DATABASE_URL=mysql://pdhp_api:pdhp_api_pass@db:3306/pdhpdb"
+      - "DATABASE_CREATE=1"
     depends_on:
       - db
 
   db:
     image: mysql
+    restart: 'always'
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD="mysql_admin_pass"
-      - MYSQL_DATABASE="pdhpdb"
-      - MYSQL_USER="pdhp_api"
-      - MYSQL_PASSWORD="pdhp_api_pass"
+      - "MYSQL_ROOT_HOST=%"
+      - "MYSQL_ROOT_PASSWORD=mysql_admin_pass"
+      - "MYSQL_DATABASE=pdhpdb"
+      - "MYSQL_USER=pdhp_api"
+      - "MYSQL_PASSWORD=pdhp_api_pass"
